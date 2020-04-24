@@ -30,6 +30,8 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
+
+/* Users */
 // All users
 app.get('/api/exercise/users', async (req, res) => {
   try {
@@ -41,7 +43,7 @@ app.get('/api/exercise/users', async (req, res) => {
 })
 
 // Create user
-app.post('/api/exercise/new-user', async (req, res) => {
+app.post('/api/exercise/new-user', (req, res) => {
   let newUser = new User({
     username: req.body.username
   })
@@ -56,6 +58,42 @@ app.post('/api/exercise/new-user', async (req, res) => {
   })
 });
 
+/* Exercises */
+
+// Create exercise
+
+app.post('/api/exercise/add', (req, res) => {
+  const exercise = new Exercise({
+    description: req.body.description,
+    duration: req.body.duration,
+    date: req.body.date,
+    userId: req.body.userId,
+    from: req.body.from,
+    to: req.body.to,
+    limit: req.body.limit
+  })
+
+  // try {
+    exercise.save((err, data) => {
+      if (err) console.log(err)
+      return res.json({
+        description: data.description,
+        duration: data.duration,
+        date: data.date,
+        userId: data.userId,
+        from: data.from,
+        to: data.to,
+        limit: data.limit
+      })
+    })
+  // } catch (err) {
+  //   if (err) res.json({ message: err })
+  // }
+
+})
+
+
+
 
 
 
@@ -63,7 +101,6 @@ app.post('/api/exercise/new-user', async (req, res) => {
 app.use((req, res, next) => {
   return next({ status: 404, message: 'not found' })
 })
-
 
 /* Error Handling middleware */
 app.use((err, req, res, next) => {

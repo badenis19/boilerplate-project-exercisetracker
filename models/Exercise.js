@@ -12,7 +12,8 @@ const UserExerciseSchema = new Schema({
     },
     date: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.now
     },
     userId: {
         type: String,
@@ -20,15 +21,17 @@ const UserExerciseSchema = new Schema({
     },
     from: {
         type: Date,
-        required: true
+        required: false,
+        default: Date.now
     },
     to: {
         type: Date,
-        required: true
+        required: false,
+        default: Date.now
     },
     limit: {
         type: Number,
-        required: true
+        required: false
     }
 });
 
