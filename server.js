@@ -1,19 +1,25 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
+require('dotenv/config')
 
 const cors = require('cors')
 
 const mongoose = require('mongoose')
-mongoose.connect(process.env.MLAB_URI || 'mongodb://localhost/exercise-track' )
+mongoose.connect(process.env.DB_CONNECTION,() => {
+  console.log('connected to DB')
+})
+
+/* Middleware */
 
 app.use(cors())
 
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 
-
 app.use(express.static('public'))
+
+/* Routes */
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
@@ -24,7 +30,8 @@ app.use((req, res, next) => {
   return next({status: 404, message: 'not found'})
 })
 
-// Error Handling middleware
+
+/* Error Handling middleware */
 app.use((err, req, res, next) => {
   let errCode, errMessage
 
@@ -43,6 +50,8 @@ app.use((err, req, res, next) => {
     .send(errMessage)
 })
 
-const listener = app.listen(process.env.PORT || 3000, () => {
-  console.log('Your app is listening on port ' + listener.address().port)
+app.listen(3000, () => {
+  console.log('Your app is listening on port 3000')
 })
+
+
