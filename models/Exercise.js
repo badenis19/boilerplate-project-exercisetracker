@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const UserExerciseSchema = new Schema({
+const ExerciseSchema = new Schema({
     description: {
         type: String,
         required: true
@@ -12,12 +12,12 @@ const UserExerciseSchema = new Schema({
     },
     date: {
         type: Date,
-        required: true,
+        required: false,
         default: Date.now
     },
-    userId: {
-        type: String,
-        required: true
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     },
     from: {
         type: Date,
@@ -35,5 +35,5 @@ const UserExerciseSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Exercises', UserExerciseSchema);
+module.exports = mongoose.model('Exercise', ExerciseSchema);
 

@@ -61,36 +61,80 @@ app.post('/api/exercise/new-user', (req, res) => {
 /* Exercises */
 
 // Create exercise
-
 app.post('/api/exercise/add', (req, res) => {
   const exercise = new Exercise({
     description: req.body.description,
     duration: req.body.duration,
     date: req.body.date,
-    userId: req.body.userId,
+    user: req.body.user,
     from: req.body.from,
     to: req.body.to,
     limit: req.body.limit
   })
 
-  // try {
-    exercise.save((err, data) => {
-      if (err) console.log(err)
-      return res.json({
-        description: data.description,
-        duration: data.duration,
-        date: data.date,
-        userId: data.userId,
-        from: data.from,
-        to: data.to,
-        limit: data.limit
-      })
+  exercise.save((err, data) => {
+    if (err) console.log(err)
+    return res.json({
+      description: data.description,
+      duration: data.duration,
+      date: data.date,
+      user: data.user,
+      from: data.from,
+      to: data.to,
+      limit: data.limit
     })
-  // } catch (err) {
-  //   if (err) res.json({ message: err })
-  // }
-
+  })
 })
+
+// Get all exercises 
+app.get("/api/exercise/log", async (req, res) => {
+  try {
+    const allExercises = await Exercise.find({})
+    return res.json(allExercises)
+  } catch (err) {
+    return res.json(err)
+  }
+})
+
+// Get user with exercise 
+app.get("/api/exercise/:user/log", async (req, res) => {
+  const user = req.params.user;
+  const rightUser = await User.findById({_id: user})
+  const exercises = await Exercise.find({user: user})
+
+  res.json({
+    username: rightUser.username,
+    exercises: exercises,
+    exerciseCount: exercises.length
+  })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -121,8 +165,8 @@ app.use((err, req, res, next) => {
     .send(errMessage)
 })
 
-app.listen(3000, () => {
-  console.log('Your app is listening on port 3000')
+app.listen(3001, () => {
+  console.log('Your app is listening on port 3001')
 })
 
 
